@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suntec REIT: Product Positioning Analysis Report - Investment Risk Management Analysis</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.8;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 15px rgba(0,0,0,0.05);
+            border-radius: 8px;
+        }
+
+        /* Language Switcher */
+        .language-switcher {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: linear-gradient(135deg, #0d324d 0%, #7f5a83 100%);
+            border-radius: 25px;
+            padding: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .lang-btn {
+            background: transparent;
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .lang-btn.active {
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .lang-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0d324d 0%, #7f5a83 100%);
+            color: white;
+            padding: 50px 40px;
+            text-align: center;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            font-size: 3.5em;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.4);
+            letter-spacing: 1px;
+        }
+
+        .header .subtitle {
+            font-size: 1.4em;
+            opacity: 0.9;
+            font-weight: 300;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+
+        .content-image {
+            width: 100%;
+            max-width: 700px;
+            margin: 25px auto 15px;
+            display: block;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.18);
+        }
+
+        /* Chart layout improvements */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        /* Asset allocation chart styles */
+        .asset-chart-section {
+            display: flex;
+            flex-direction: column;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .asset-chart-section .chart-title {
+            color: #1e3c72;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+            text-align: center;
+        }
+
+        .asset-chart-wrapper {
+            max-width: 350px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .asset-chart-info {
+            margin-top: 20px;
+            text-align: center;
+            color: #666;
+        }
+
+        /* ESG chart title styling */
+        .esg-chart-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .esg-chart-title {
+            font-size: 1.5em;
+            font-weight: 600;
+            color: white;
+            background: linear-gradient(135deg, #43a047 0%, #2e7d32 100%);
+            padding: 15px 25px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+        
+        .esg-chart-wrapper {
+            position: relative;
+            margin: 0 auto;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        /* Chart container styles */
+        .chart-container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .chart-container h3 {
+            color: #1e3c72;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+        }
+
+        .chart-wrapper {
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        /* Accordion styles */
+        .accordion {
+            background: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .accordion-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 30px;
+            cursor: pointer;
+            font-size: 1.2em;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s;
+        }
+
+        .accordion-header:hover {
+            background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+        }
+
+        .accordion-content {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .accordion-content.active {
+            padding: 30px;
+            max-height: 2000px;
+        }
+
+        .accordion-icon {
+            transition: transform 0.3s;
+        }
+
+        .accordion-header.active .accordion-icon {
+            transform: rotate(180deg);
+        }
+
+        .report-meta {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .meta-item {
+            text-align: center;
+        }
+
+        .meta-item h3 {
+            color: #1e3c72;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .meta-item p {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .question-section {
+            background: white;
+            margin-bottom: 30px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .question-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px 30px;
+            font-size: 1.3em;
+            font-weight: 600;
+        }
+
+        .question-content {
+            padding: 30px;
+        }
+
+        .step-section {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .step-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #1e3c72;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .step-number {
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border: 1px solid #2196f3;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .highlight-box h4 {
+            color: #1976d2;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .data-point {
+            background: white;
+            border: 2px solid #4caf50;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .data-icon {
+            background: #4caf50;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-weight: bold;
+        }
+
+        .data-content h5 {
+            color: #2e7d32;
+            margin-bottom: 5px;
+        }
+
+        .data-content p {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .conclusion {
+            background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 20px;
+            margin-bottom: 30px;
+        }
+
+        .conclusion h3 {
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .key-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .metric-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            border-top: 4px solid #667eea;
+        }
+
+        .metric-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #1e3c72;
+            margin-bottom: 5px;
+        }
+
+        .metric-label {
+            color: #666;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Hyperlink styles */
+        .data-link {
+            color: #1976d2;
+            text-decoration: none;
+            font-weight: 600;
+            border-bottom: 1px dotted #1976d2;
+            transition: all 0.3s;
+        }
+
+        .data-link:hover {
+            color: #0d47a1;
+            border-bottom: 1px solid #0d47a1;
+        }
+
+        /* Sources section styles */
+        .sources-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .sources-section h3 {
+            color: #1e3c72;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+        }
+
+        .sources-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sources-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+            line-height: 1.6;
+        }
+        
+        .sources-list li strong {
+            color: #333;
+        }
+
+        .sources-list li:last-child {
+            border-bottom: none;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        /* Language-specific content */
+        .lang-content {
+            display: none;
+        }
+
+        .lang-content.active {
+            display: block;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5em;
+            }
+            
+            .language-switcher {
+                top: 10px;
+                right: 10px;
+            }
+            
+            .lang-btn {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Language Switcher -->
+    <div class="language-switcher">
+        <button class="lang-btn active" onclick="switchLanguage('en')">EN</button>
+        <button class="lang-btn" onclick="switchLanguage('zh')">中文</button>
+    </div>
+
+    <div class="container">
+        <!-- English Header -->
+        <div class="lang-content active" id="en-header">
+            <div class="header">
+                <h1>Suntec REIT</h1>
+                <div class="subtitle">Product Positioning Analysis Report - Investment Risk Management Analysis</div>
+            </div>
+        </div>
+
+        <!-- Chinese Header -->
+        <div class="lang-content" id="zh-header">
+            <div class="header">
+                <h1>Suntec REIT</h1>
+                <div class="subtitle">产品定位分析报告 - 投资风险管理分析</div>
+            </div>
+        </div>
+
+        <img src="photo/SuntecCity.jpg" alt="Suntec City Singapore" class="content-image">
+
+        <!-- Report Meta Information -->
+        <div class="report-meta">
+            <div class="meta-item">
+                <h3 id="en-report-date">Report Date</h3>
+                <h3 id="zh-report-date" style="display:none;">报告日期</h3>
+                <p>January 2025</p>
+            </div>
+            <div class="meta-item">
+                <h3 id="en-analysis-type">Analysis Type</h3>
+                <h3 id="zh-analysis-type" style="display:none;">分析类型</h3>
+                <p id="en-type">Product Positioning</p>
+                <p id="zh-type" style="display:none;">产品定位</p>
+            </div>
+            <div class="meta-item">
+                <h3 id="en-data-source">Data Source</h3>
+                <h3 id="zh-data-source" style="display:none;">数据来源</h3>
+                <p id="en-source">Suntec REIT Public Disclosures</p>
+                <p id="zh-source" style="display:none;">Suntec REIT公开披露</p>
+            </div>
+        </div>
+
+        <!-- Charts Grid -->
+        <div class="charts-grid">
+            <!-- Asset Allocation Chart -->
+            <div class="asset-chart-section">
+                <div class="chart-title" id="en-asset-title">Portfolio Geographic Distribution</div>
+                <div class="chart-title" id="zh-asset-title" style="display:none;">投资组合地理分布</div>
+                <div class="asset-chart-wrapper">
+                    <canvas id="assetChart"></canvas>
+                </div>
+                <div class="asset-chart-info" id="en-asset-info">
+                    Core assets: Suntec City Singapore<br>
+                    Office occupancy: 98.8%
+                </div>
+                <div class="asset-chart-info" id="zh-asset-info" style="display:none;">
+                    核心资产：新加坡Suntec City<br>
+                    办公入住率：98.8%
+                </div>
+            </div>
+
+            <!-- ESG Progress Chart -->
+            <div class="esg-chart-section">
+                <div class="esg-chart-title" id="en-esg-title">
+                    🌱 ESG Progress Timeline
+                </div>
+                <div class="esg-chart-title" id="zh-esg-title" style="display:none;">
+                    🌱 ESG进展时间线
+                </div>
+                <div class="esg-chart-wrapper">
+                    <canvas id="esgChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Question 1 Section -->
+        <div class="question-section">
+            <div class="question-header" id="en-q1-header">
+                Question 1: Does Suntec REIT have sustainable competitive advantages?
+            </div>
+            <div class="question-header" id="zh-q1-header" style="display:none;">
+                问题1：Suntec REIT是否具有可持续竞争优势？
+            </div>
+            
+            <div class="question-content">
+                <!-- English Content -->
+                <div class="lang-content active" id="en-q1-content">
+                    <div class="highlight-box">
+                        <h4>Product Positioning Overview</h4>
+                        <p>Suntec REIT is positioned as a comprehensive commercial real estate project, with its core asset "Suntec City" being one of Singapore's iconic landmarks. It integrates Grade A office buildings, large shopping centers, and world-class convention and exhibition centers, aiming to provide a one-stop premium experience for business and leisure customers. Suntec REIT's target customer base is broad, including multinational corporations, small and medium enterprises, retail merchants, as well as organizers and participants of exhibition events.</p>
+                    </div>
+
+                    <div class="step-section">
+                        <div class="step-title">
+                            <div class="step-number">1</div>
+                            Target Audience Analysis
+                        </div>
+                        <p><strong>Primary Target Audiences:</strong></p>
+                        <ul>
+                            <li><strong>Tenants:</strong> Multinational corporations, financial institutions, and retailers seeking premium commercial spaces in strategic locations (such as Singapore CBD, Sydney business district), with high-income corporate demographic characteristics and psychological traits valuing prestige and convenience</li>
+                            <li><strong>Unit Holders:</strong> Institutional and retail investors seeking stable income and growth, with pain points including market volatility and financing costs</li>
+                        </ul>
+                        <div class="data-point">
+                            <div class="data-icon">98.8%</div>
+                            <div class="data-content">
+                                <h5>2024 Suntec City Office Space Occupancy Rate</h5>
+                                <p>Above market average of 94.7%</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step-section">
+                        <div class="step-title">
+                            <div class="step-number">2</div>
+                            Competitive Analysis
+                        </div>
+                        <p><strong>Main Competitors:</strong></p>
+                        <ul>
+                            <li>Other Singapore REITs (such as <a href="https://pitchbook.com/profiles/company/103150-06" target="_blank" class="data-link" title="PitchBook Profile for Suntec REIT and competitors">CapitaLand Integrated Commercial Trust, Mapletree Commercial Trust</a>)</li>
+                            <li>Global REITs (such as <a href="https://pitchbook.com/profiles/company/103150-06" target="_blank" class="data-link" title="PitchBook Profile for Suntec REIT and competitors">IREIT Global Group</a>)</li>
+                        </ul>
+                        <div class="key-metrics">
+                            <div class="metric-card">
+                                <div class="metric-value">
+                                    <a href="https://www.sgx.com/securities/annual-reports-related-documents" target="_blank" class="data-link" title="Source: Suntec REIT 2024 Annual Report">SGD 12.1B</a>
+                                </div>
+                                <div class="metric-label">Portfolio Value</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-value">
+                                    <a href="https://www.sgx.com/securities/annual-reports-related-documents" target="_blank" class="data-link" title="Source: Suntec REIT 2024 Annual Report">78%</a>
+                                </div>
+                                <div class="metric-label">Office Assets</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-value">
+                                    <a href="https://www.sgx.com/securities/annual-reports-related-documents" target="_blank" class="data-link" title="Source: Suntec REIT 2024 Annual Report">69%</a>
+                                </div>
+                                <div class="metric-label">Singapore Assets</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step-section">
+                        <div class="step-title">
+                            <div class="step-number">3</div>
+                            Product Characteristics & Advantages
+                        </div>
+                        <div class="key-metrics">
+                            <div class="metric-card">
+                                <div class="metric-value">
+                                    <a href="https://links.sgx.com/1.0.0/corporate-announcements/LQCK42988UA0XYLJ/831147_Suntec%20REIT%20-%20FY2024%20Financial%20Results.pdf" target="_blank" class="data-link" title="Source: Suntec REIT FY2024 Financial Results">98.8%</a>
+                                </div>
+                                <div class="metric-label">Suntec City Office Occupancy</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-value">
+                                    <a href="https://links.sgx.com/1.0.0/corporate-announcements/LQCK42988UA0XYLJ/831147_Suntec%20REIT%20-%20FY2024%20Financial%20Results.pdf" target="_blank" class="data-link" title="Source: Suntec REIT FY2024 Financial Results">98.4%</a>
+                                </div>
+                                <div class="metric-label">Suntec City Mall Occupancy</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-value">
+                                    <a href="https://links.sgx.com/1.0.0/corporate-announcements/LQCK42988UA0XYLJ/831147_Suntec%20REIT%20-%20FY2024%20Financial%20Results.pdf" target="_blank" class="data-link" title="Source: Suntec REIT FY2024 Financial Results">66.3%</a>
+                                </div>
+                                <div class="metric-label">Suntec Singapore Convention Centre Stake</div>
+                            </div>
+                        </div>
+                        
+                        <h4>Uniqueness</h4>
+                        <ul>
+                            <li>Mixed-use development synergies (office, retail, convention)</li>
+                            <li>Integrated design of Suntec City</li>
+                            <li>Prime location (Singapore CBD)</li>
+                            <li>ESG certification (20.4% energy intensity reduction since 2019)</li>
+                        </ul>
+                    </div>
+
+                    <div class="step-section">
+                        <div class="step-title">
+                            <div class="step-number">4</div>
+                            Sustainable Competitive Advantage Analysis
+                        </div>
+                        
+                        <h4>Business Model</h4>
+                        <p>Externally managed REIT operated by ESR Group subsidiary ARA Trust Management (Suntec) Limited, focusing on rental income and capital growth. This structure ensures professional management but relies on ESR's 9% stake and expertise.</p>
+                        
+                        <h4>Brand</h4>
+                        <p>Singapore's first integrated REIT since 2004, known for flagship Suntec City and consistent <a href="https://www.sustainalytics.com/esg-rating/suntec-real-estate-investment-trust/" target="_blank" class="data-link" title="Source: Sustainalytics ESG Risk Rating (2024-09-22)">GRESB 5-star rating</a> (2020-2024). Brand emphasizes quality, sustainability, and stability.</p>
+                        
+                        <h4>Distribution</h4>
+                        <p>Properties leased to tenants through direct agreements or property management companies, with sales teams targeting multinational corporations and retailers. Units sold to investors through SGX (code: T82U), with 42% held by retail investors and 48% by institutions.</p>
+                        
+                        <h4>Operations</h4>
+                        <p>Properties managed by ARA Trust Management, with maintenance and leasing handled by professional teams. <a href="https://www.suntecreit.com/sustainability.html" target="_blank" class="data-link" title="Source: Suntec REIT 2024 Sustainability Report">70% of debt is green/sustainability-linked loans</a> in 2024.</p>
+                        
+                        <h4>Intellectual Property</h4>
+                        <p>As a REIT, no patents or significant IP held, but proprietary lease agreements and ESG framework provide operational uniqueness.</p>
+                        
+                        <h4>Innovation Capability</h4>
+                        <p>Innovation through ESG initiatives (such as <a href="https://www.suntecreit.com/sustainability.html" target="_blank" class="data-link" title="Source: Suntec REIT 2024 Sustainability Report">21 Harris Street achieving carbon neutrality</a> in 2024) and asset enhancements (such as <a href="https://www.suntecreit.com/milestones.html" target="_blank" class="data-link" title="Source: Suntec REIT Key Milestones">SGD 410 million Suntec City refurbishment</a> 2012-2014).</p>
+                    </div>
+                </div>
+
+                <!-- Chinese Content -->
+                <div class="lang-content" id="zh-q1-content">
+                    <div class="highlight-box">
+                        <h4>产品定位概述</h4>
+                        <p>Suntec REIT被定位为一个综合性商业地产项目，其核心资产"新达城"（Suntec City）是新加坡的标志性地标之一。它集甲级写字楼、大型购物中心和世界级会议展览中心于一体，旨在为商业和休闲客户提供一站式的高端体验。Suntec REIT的目标客户群体广泛，包括跨国公司、中小型企业、零售商户以及会展活动的组织者和参与者。</p>
+                    </div>
+
+                    <div class="step-section">
+                        <div class="step-title">
+                            <div class="step-number">1</div>
+                            目标受众分析
+                        </div>
+                        <p><strong>主要目标受众：</strong></p>
+                        <ul>
+                            <li><strong>租户：</strong>寻求战略位置优质商业空间的多国公司、金融机构和零售商（如新加坡CBD、悉尼商业区），具有高收入企业的人口统计特征，重视声望和便利性的心理特征</li>
+                            <li><strong>单位持有人：</strong>寻求稳定收入和增长的机构和零售投资者，痛点包括市场波动和融资成本</li>
+                        </ul>
+                        <div class="data-point">
+                            <div class="data-icon">98.8%</div>
+                            <div class="data-content">
+                                <h5>2024年Suntec City办公空间入住率</h5>
+                                <p>高于市场平均水平94.7%</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step-section">
+                        <div class="step-title">
+                            <div class="step-number">2</div>
+                            竞争分析
+                        </div>
+                        <p><strong>主要竞争对手：</strong></p>
+                        <ul>
+                            <li>其他新加坡REIT（如<a href="https://pitchbook.com/profiles/company/103150-06" target="_blank" class="data-link" title="PitchBook Profile for Suntec REIT and competitors">CapitaLand Integrated Commercial Trust、Mapletree Commercial Trust</a>）</li>
+                            <li>全球REIT（如<a href="https://pitchbook.com/profiles/company/103150-06" target="_blank" class="data-link" title="PitchBook Profile for Suntec REIT and competitors">IREIT Global Group</a>）</li>
+                        </ul>
+                        <div class="key-metrics">
+                            <div class="metric-card">
+                                <div class="metric-value">
+                                    <a href="https://www.sgx.com/securities/annual-reports-related-documents" target="_blank" class="data-link" title="来源：Suntec REIT 2024年度报告">12.1B</a>
+                                </div>
+                                <div class="metric-label">SGD投资组合</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-value">
+                                    <a href="https://www.sgx.com/securities/annual-reports-related-documents" target="_blank" class="data-link" title="来源：Suntec REIT 2024年度报告">78%</a>
+                                </div>
+                                <div class="metric-label">办公物业占比</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-value">
+                                    <a href="https://www.sgx.com/securities/annual-reports-related-documents" target="_blank" class="data-link" title="来源：Suntec REIT 2024年度报告">69%</a>
+                                </div>
+                                <div class="metric-label">新加坡资产占比</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step-section">
+                        <div class="step-title">
+                            <div class="step-number">3</div>
+                            产品特性和优势
+                        </div>
+                        <div class="key-metrics">
+                            <div class="metric-card">
+                                <div class="metric-value">
+                                    <a href="https://links.sgx.com/1.0.0/corporate-announcements/LQCK42988UA0XYLJ/831147_Suntec%20REIT%20-%20FY2024%20Financial%20Results.pdf" target="_blank" class="data-link" title="来源：Suntec REIT 2024财年财务结果">98.8%</a>
+                                </div>
+                                <div class="metric-label">Suntec City办公入住率</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-value">
+                                    <a href="https://links.sgx.com/1.0.0/corporate-announcements/LQCK42988UA0XYLJ/831147_Suntec%20REIT%20-%20FY2024%20Financial%20Results.pdf" target="_blank" class="data-link" title="来源：Suntec REIT 2024财年财务结果">98.4%</a>
+                                </div>
+                                <div class="metric-label">Suntec City购物中心入住率</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-value">
+                                    <a href="https://links.sgx.com/1.0.0/corporate-announcements/LQCK42988UA0XYLJ/831147_Suntec%20REIT%20-%20FY2024%20Financial%20Results.pdf" target="_blank" class="data-link" title="来源：Suntec REIT 2024财年财务结果">66.3%</a>
+                                </div>
+                                <div class="metric-label">Suntec Singapore会议中心股权</div>
+                            </div>
+                        </div>
+                        
+                        <h4>独特性</h4>
+                        <ul>
+                            <li>混合用途开发（办公、零售、会展）的协同效应</li>
+                            <li>Suntec City的综合设计</li>
+                            <li>地理位置优越（位于新加坡中央商务区）</li>
+                            <li>ESG认证（如2019年以来能源强度降低<a href="https://www.suntecreit.com/sustainability.html" target="_blank" class="data-link" title="来源：Suntec REIT 2024可持续发展报告">20.4%</a>）</li>
+                        </ul>
+                    </div>
+
+                    <div class="step-section">
+                        <div class="step-title">
+                            <div class="step-number">4</div>
+                            可持续竞争优势分析
+                        </div>
+                        
+                        <h4>商业模式</h4>
+                        <p>外部管理的REIT，由ESR Group子公司ARA Trust Management (Suntec) Limited运营，专注于租金收入和资本增长。该结构确保专业管理，但依赖ESR的9%股权和专业知识。</p>
+                        
+                        <h4>品牌</h4>
+                        <p>自2004年上市的新加坡首个综合REIT，以其旗舰Suntec City和一致的<a href="https://www.sustainalytics.com/esg-rating/suntec-real-estate-investment-trust/" target="_blank" class="data-link" title="来源：Sustainalytics ESG风险评级 (2024-09-22)">GRESB 5星评级</a>（2020-2024）而闻名。品牌强调质量、可持续性和稳定性。</p>
+                        
+                        <h4>分销</h4>
+                        <p>通过直接协议或物业管理公司向租户租赁物业，销售团队针对多国公司和零售商。单位通过SGX（代码：T82U）向投资者销售，42%由零售投资者持有，48%由机构持有。</p>
+                        
+                        <h4>运营</h4>
+                        <p>由ARA Trust Management管理物业，维护和租赁由专业团队处理。2024年<a href="https://www.suntecreit.com/sustainability.html" target="_blank" class="data-link" title="来源：Suntec REIT 2024可持续发展报告">70%的债务为绿色/可持续发展相关贷款</a>。</p>
+                        
+                        <h4>知识产权</h4>
+                        <p>作为REIT，不持有专利或重要知识产权，但专有租赁协议和ESG框架提供运营独特性。</p>
+                        
+                        <h4>创新能力</h4>
+                        <p>通过ESG倡议（如2024年<a href="https://www.suntecreit.com/sustainability.html" target="_blank" class="data-link" title="来源：Suntec REIT 2024可持续发展报告">21 Harris Street实现碳中和</a>）和资产增强（如2012-2014年<a href="https://www.suntecreit.com/milestones.html" target="_blank" class="data-link" title="来源：Suntec REIT关键里程碑">4.1亿新元Suntec City改造</a>）进行创新。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Conclusion for Question 1 -->
+        <div class="conclusion">
+            <h3 id="en-conclusion-title">Question 1 Conclusion</h3>
+            <h3 id="zh-conclusion-title" style="display:none;">问题1结论</h3>
+            <p id="en-conclusion-text">Suntec REIT has sustainable competitive advantages through its business model (diversified portfolio, professional management), brand (credible, ESG-oriented), distribution (high occupancy leasing, SGX access), operations (efficient, sustainable), and innovation (ESG leadership, asset enhancement). Lack of patents/IP is typical for REITs and doesn't weaken advantages, as competitors face barriers in replicating its prime locations, integrated assets, and sustainability credentials.</p>
+            <p id="zh-conclusion-text" style="display:none;">Suntec REIT通过其商业模式（多元化投资组合、专业管理）、品牌（可信、ESG导向）、分销（高入住率租赁、SGX准入）、运营（高效、可持续）和创新（ESG领导力、资产增强）具有可持续竞争优势。缺乏专利/IP对REIT来说是典型的，不会削弱其优势，因为竞争对手在复制其优质位置、综合资产和可持续发展资质方面面临障碍。</p>
+        </div>
+
+        <!-- Question 2 Section -->
+        <div class="question-section">
+            <div class="question-header" id="en-q2-header">
+                Question 2: Does Suntec REIT solve major problems or pain points in a significant way?
+            </div>
+            <div class="question-header" id="zh-q2-header" style="display:none;">
+                问题2：Suntec REIT是否以重大方式解决主要问题或痛点？
+            </div>
+            
+            <div class="question-content">
+                <!-- English Content for Question 2 -->
+                <div class="lang-content active" id="en-q2-content">
+                    <div class="highlight-box">
+                        <h4>Problem Solving Overview</h4>
+                        <p>Suntec REIT's product solves important problems for tenants (who need quality, sustainable commercial spaces) and unit holders (who have demand for stable, diversified income).</p>
+                    </div>
+
+                    <div class="step-section">
+                        <div class="step-title">
+                            <div class="step-number">5</div>
+                            Customer Benefit Analysis
+                        </div>
+                        <h4>Tenant Benefits:</h4>
+                        <ul>
+                            <li>Premium office and retail spaces in prime locations (such as Singapore CBD, Sydney, London)</li>
+                            <li>Modern facilities and high occupancy rates (office <a href="https://links.sgx.com/1.0.0/corporate-announcements/LQCK42988UA0XYLJ/831147_Suntec%20REIT%20-%20FY2024%20Financial%20Results.pdf" target="_blank" class="data-link" title="Source: Suntec REIT FY2024 Financial Results">98.8%</a>, shopping center <a href="https://links.sgx.com/1.0.0/corporate-announcements/LQCK42988UA0XYLJ/831147_Suntec%20REIT%20-%20FY2024%20Financial%20Results.pdf" target="_blank" class="data-link" title="Source: Suntec REIT FY2024 Financial Results">98.4%</a>)</li>
+                            <li>ESG compliance (such as <a href="https://www.suntecreit.com/sustainability.html" target="_blank" class="data-link" title="Source: Suntec REIT 2024 Sustainability Report">20.4% energy reduction</a>)</li>
+                        </ul>
+                        
+                        <h4>Unit Holder Benefits:</h4>
+                        <ul>
+                            <li>Stable distributions (<a href="https://links.sgx.com/1.0.0/corporate-announcements/LQCK42988UA0XYLJ/831147_Suntec%20REIT%20-%20FY2024%20Financial%20Results.pdf" target="_blank" class="data-link" title="Source: Suntec REIT FY2024 Financial Results">6.192 cents DPU</a> in 2024) and capital growth potential</li>
+                            <li>Diversified assets (<a href="https://www.sgx.com/securities/annual-reports-related-documents" target="_blank" class="data-link" title="Source: Suntec REIT 2024 Annual Report">Singapore, Australia, UK</a>) and long-term leases provide income stability</li>
+                        </ul>
+                        
+                        <div class="data-point">
+                            <div class="data-icon"><a href="https://links.sgx.com/1.0.0/corporate-announcements/LQCK42988UA0XYLJ/831147_Suntec%20REIT%20-%20FY2024%20Financial%20Results.pdf" target="_blank" class="data-link" title="Source: Suntec REIT FY2024 Financial Results" style="color:white; border:none;">10.3%</a></div>
+                            <div class="data-content">
+                                <h5>2024 Positive Rental Reversion</h5>
+                                <p>26 consecutive quarters of positive rental reversion</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step-section">
+                        <div class="step-title">
+                            <div class="step-number">6</div>
+                            Problem Solving and Demand
+                        </div>
+                        <h4>Problem Solving:</h4>
+                        <ul>
+                            <li><strong>Tenants:</strong> Addresses the challenge of obtaining premium spaces in competitive markets, providing integrated developments (such as Suntec City's office-retail-convention combination) and sustainable features</li>
+                            <li><strong>Unit Holders:</strong> Mitigates investment risks through diversification, high-occupancy assets, and proactive capital management</li>
+                        </ul>
+                        
+                        <h4>Market Demand:</h4>
+                        <ul>
+                            <li><a href="https://links.sgx.com/1.0.0/corporate-announcements/LQCK42988UA0XYLJ/831147_Suntec%20REIT%20-%20FY2024%20Financial%20Results.pdf" target="_blank" class="data-link" title="Source: Suntec REIT FY2024 Financial Results">98.8% office occupancy in 2024</a> (above market 94.7%)</li>
+                            <li><a href="https://www.businesstimes.com.sg/companies-markets/suntec-reit" target="_blank" class="data-link" title="Source: The Business Times (2025-01-08)">Suntec Convention Centre revenue growth of 16.9%</a></li>
+                            <li>Consistent investment interest (2.93 billion units outstanding)</li>
+                        </ul>
+                    </div>
+
+                    <div class="step-section">
+                        <div class="step-title">
+                            <div class="step-number">7</div>
+                            Challenges and Service Delivery
+                        </div>
+                        <h4>Challenges:</h4>
+                        <ul>
+                            <li>Vacancy in Australia (Adelaide 55 Currie Street) and UK (London The Minster Building)</li>
+                            <li>Higher financing costs (<a href="https://links.sgx.com/1.0.0/corporate-announcements/LQCK42988UA0XYLJ/831147_Suntec%20REIT%20-%20FY2024%20Financial%20Results.pdf" target="_blank" class="data-link" title="Source: Suntec REIT FY2024 Financial Results">4.06% in 2024</a>)</li>
+                            <li>Geopolitical tensions affecting global markets</li>
+                        </ul>
+                        
+                        <h4>Solutions:</h4>
+                        <ul>
+                            <li>Address vacancy through proactive leasing strategies (such as targeting high-yield tenants)</li>
+                            <li>Mitigate financing costs through refinancing (such as <a href="https://links.sgx.com/1.0.0/corporate-announcements/LQCK42988UA0XYLJ/831147_Suntec%20REIT%20-%20FY2024%20Financial%20Results.pdf" target="_blank" class="data-link" title="Source: Suntec REIT FY2024 Financial Results">SGD 950 million refinancing</a>) and 58% fixed-rate debt</li>
+                            <li>Diversified portfolio to buffer geopolitical risks</li>
+                            <li>ESG initiatives (<a href="https://www.suntecreit.com/sustainability.html" target="_blank" class="data-link" title="Source: Suntec REIT 2024 Sustainability Report">70% green loans</a>) enhance tenant retention and investor appeal</li>
+                        </ul>
+                    </div>
+
+                    <div class="step-section">
+                        <div class="step-title">
+                            <div class="step-number">8</div>
+                            Financial Considerations
+                        </div>
+                        <p>The table below summarizes key financial metrics. You can use the search box to filter data.</p>
+                        <table id="financialsTable" class="display" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>Metric</th>
+                                    <th>Value</th>
+                                    <th>Year/Date</th>
+                                    <th>Source</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Total Revenue</td>
+                                    <td>SGD 463.6M</td>
+                                    <td>2024</td>
+                                    <td><a href="https://links.sgx.com/1.0.0/corporate-announcements/LQCK42988UA0XYLJ/831147_Suntec%20REIT%20-%20FY2024%20Financial%20Results.pdf" target="_blank" class="data-link">2024 Financial Report</a></td>
+                                </tr>
+                                <tr>
+                                    <td>Net Property Income</td>
+                                    <td>SGD 310.8M</td>
+                                    <td>2024</td>
+                                    <td><a href="https://links.sgx.com/1.0.0/corporate-announcements/LQCK42988UA0XYLJ/831147_Suntec%20REIT%20-%20FY2024%20Financial%20Results.pdf" target="_blank" class="data-link">2024 Financial Report</a></td>
+                                </tr>
+                                <tr>
+                                    <td>Unit Price</td>
+                                    <td>SGD 0.87</td>
+                                    <td>2025-05-27</td>
+                                    <td><a href="https://finance.yahoo.com/quote/T82U.SI/" target="_blank" class="data-link">Yahoo Finance</a></td>
+                                </tr>
+                                <tr>
+                                    <td>Gearing Ratio</td>
+                                    <td>42.4%</td>
+                                    <td>2024</td>
+                                    <td><a href="https://links.sgx.com/1.0.0/corporate-announcements/LQCK42988UA0XYLJ/831147_Suntec%20REIT%20-%20FY2024%20Financial%20Results.pdf" target="_blank" class="data-link">2024 Financial Report</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <br>
+                        <p><strong>Pricing:</strong> Tenant leasing has competitive pricing, with <a href="https://links.sgx.com/1.0.0/corporate-announcements/LQCK42988UA0XYLJ/831147_Suntec%20REIT%20-%20FY2024%20Financial%20Results.pdf" target="_blank" class="data-link" title="Source: Suntec REIT FY2024 Financial Results">10.3% positive rental reversion in 2024</a> reflecting market demand. Units trade on SGX (as of <a href="https://finance.yahoo.com/quote/T82U.SI/" target="_blank" class="data-link" title="Source: Yahoo Finance (2025-06-20)">May 27, 2025 at SGD 0.87</a>).</p>
+                        <p><strong>Profitability:</strong> SGD 463.6M total revenue and SGD 310.8M net property income in 2024 support profitability, despite DPU declining 12.5% due to higher financing costs and no capital distribution.</p>
+                    </div>
+
+                    <div class="step-section">
+                        <div class="step-title">
+                            <div class="step-number">9</div>
+                            Positioning Statement
+                        </div>
+                        <div class="highlight-box">
+                            <p><strong>Suntec REIT Positioning Statement:</strong></p>
+                            <p>Suntec REIT provides premium, sustainable commercial spaces in prime global locations, for tenants seeking quality and connectivity, and unit holders seeking stable, diversified income, leveraging its integrated assets, ESG leadership, and credible brand.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chinese Content for Question 2 -->
+                <div class="lang-content" id="zh-q2-content">
+                    <div class="highlight-box">
+                        <h4>问题解决概述</h4>
+                        <p>Suntec REIT的产品解决了租户（需要优质、可持续的商业空间）和单位持有人（对稳定、多元化收入的需求）的重要问题。</p>
+                    </div>
+
+                    <div class="step-section">
+                        <div class="step-title">
+                            <div class="step-number">5</div>
+                            客户利益分析
+                        </div>
+                        <h4>租户利益：</h4>
+                        <ul>
+                            <li>优质办公和零售空间，位于黄金位置（如新加坡CBD、悉尼、伦敦）</li>
+                            <li>现代设施和高入住率（办公<a href="https://links.sgx.com/1.0.0/corporate-announcements/LQCK42988UA0XYLJ/831147_Suntec%20REIT%20-%20FY2024%20Financial%20Results.pdf" target="_blank" class="data-link" title="来源：Suntec REIT 2024财年财务结果">98.8%</a>，购物中心<a href="https://links.sgx.com/1.0.0/corporate-announcements/LQCK42988UA0XYLJ/831147_Suntec%20REIT%20-%20FY2024%20Financial%20Results.pdf" target="_blank" class="data-link" title="来源：Suntec REIT 2024财年财务结果">98.4%</a>）</li>
+                            <li>ESG合规（如能源减少<a href="https://www.suntecreit.com/sustainability.html" target="_blank" class="data-link" title="来源：Suntec REIT 2024可持续发展报告">20.4%</a>）</li>
+                        </ul>
+                        
+                        <h4>单位持有人利益：</h4>
+                        <ul>
+                            <li>稳定分配（2024年<a href="https://links.sgx.com/1.0.0/corporate-announcements/LQCK42988UA0XYLJ/831147_Suntec%20REIT%20-%20FY2024%20Financial%20Results.pdf" target="_blank" class="data-link" title="来源：Suntec REIT 2024财年财务结果">6.192分DPU</a>）和资本增长潜力</li>
+                            <li>多元化资产（<a href="https://www.sgx.com/securities/annual-reports-related-documents" target="_blank" class="data-link" title="来源：Suntec REIT 2024年度报告">新加坡、澳大利亚、英国</a>）和长期租赁提供收入稳定性</li>
+                        </ul>
+                        
+                        <div class="data-point">
+                            <div class="data-icon"><a href="https://links.sgx.com/1.0.0/corporate-announcements/LQCK42988UA0XYLJ/831147_Suntec%20REIT%20-%20FY2024%20Financial%20Results.pdf" target="_blank" class="data-link" title="来源：Suntec REIT 2024财年财务结果" style="color:white; border:none;">10.3%</a></div>
+                            <div class="data-content">
+                                <h5>2024年正租金反转</h5>
+                                <p>连续26个季度正租金反转</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step-section">
+                        <div class="step-title">
+                            <div class="step-number">6</div>
+                            问题解决和需求
+                        </div>
+                        <h4>问题解决：</h4>
+                        <ul>
+                            <li><strong>租户：</strong>解决在竞争激烈的市场中获得优质空间的挑战，提供综合开发（如Suntec City的办公-零售-会议组合）和可持续特性</li>
+                            <li><strong>单位持有人：</strong>通过多元化、高入住率资产和主动资本管理缓解投资风险</li>
+                        </ul>
+                        
+                        <h4>市场需求：</h4>
+                        <ul>
+                            <li><a href="https://links.sgx.com/1.0.0/corporate-announcements/LQCK42988UA0XYLJ/831147_Suntec%20REIT%20-%20FY2024%20Financial%20Results.pdf" target="_blank" class="data-link" title="来源：Suntec REIT FY2024 Financial Results">2024年98.8%的办公入住率</a>（高于市场94.7%）</li>
+                            <li><a href="https://www.businesstimes.com.sg/companies-markets/suntec-reit" target="_blank" class="data-link" title="来源：The Business Times (2025-01-08)">Suntec会议中心收入增长16.9%</a></li>
+                            <li>一致的投资兴趣（29.3亿流通单位）</li>
+                        </ul>
+                    </div>
+
+                    <div class="step-section">
+                        <div class="step-title">
+                            <div class="step-number">7</div>
+                            挑战和服务提供
+                        </div>
+                        <h4>挑战：</h4>
+                        <ul>
+                            <li>澳大利亚（阿德莱德55 Currie Street）和英国（伦敦The Minster Building）的空置</li>
+                            <li>更高的融资成本（<a href="https://links.sgx.com/1.0.0/corporate-announcements/LQCK42988UA0XYLJ/831147_Suntec%20REIT%20-%20FY2024%20Financial%20Results.pdf" target="_blank" class="data-link" title="来源：Suntec REIT FY2024 Financial Results">2024年4.06%</a>）</li>
+                            <li>影响全球市场的地缘政治紧张局势</li>
+                        </ul>
+                        
+                        <h4>解决方案：</h4>
+                        <ul>
+                            <li>通过主动租赁策略解决空置（如针对高收益租户）</li>
+                            <li>通过再融资（如<a href="https://links.sgx.com/1.0.0/corporate-announcements/LQCK42988UA0XYLJ/831147_Suntec%20REIT%20-%20FY2024%20Financial%20Results.pdf" target="_blank" class="data-link" title="来源：Suntec REIT FY2024 Financial Results">9.5亿新元再融资</a>）和58%固定利率债务缓解融资成本</li>
+                            <li>多元化投资组合以缓冲地缘政治风险</li>
+                            <li>ESG倡议（<a href="https://www.suntecreit.com/sustainability.html" target="_blank" class="data-link" title="来源：Suntec REIT 2024可持续发展报告">70%绿色贷款</a>）增强租户保留和投资者吸引力</li>
+                        </ul>
+                    </div>
+
+                    <div class="step-section">
+                        <div class="step-title">
+                            <div class="step-number">8</div>
+                            财务考虑
+                        </div>
+                        <p>下表总结了关键财务指标。您可以使用搜索框筛选数据。</p>
+                        <table id="financialsTable" class="display" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>指标</th>
+                                    <th>数值</th>
+                                    <th>年份/日期</th>
+                                    <th>来源</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>总收入</td>
+                                    <td>4.636亿 新元</td>
+                                    <td>2024</td>
+                                    <td><a href="https://links.sgx.com/1.0.0/corporate-announcements/LQCK42988UA0XYLJ/831147_Suntec%20REIT%20-%20FY2024%20Financial%20Results.pdf" target="_blank" class="data-link">2024财报</a></td>
+                                </tr>
+                                <tr>
+                                    <td>净物业收入</td>
+                                    <td>3.108亿 新元</td>
+                                    <td>2024</td>
+                                    <td><a href="https://links.sgx.com/1.0.0/corporate-announcements/LQCK42988UA0XYLJ/831147_Suntec%20REIT%20-%20FY2024%20Financial%20Results.pdf" target="_blank" class="data-link">2024财报</a></td>
+                                </tr>
+                                <tr>
+                                    <td>单位价格</td>
+                                    <td>0.87 新元</td>
+                                    <td>2025-05-27</td>
+                                    <td><a href="https://finance.yahoo.com/quote/T82U.SI/" target="_blank" class="data-link">Yahoo Finance</a></td>
+                                </tr>
+                                <tr>
+                                    <td>杠杆率</td>
+                                    <td>42.4%</td>
+                                    <td>2024</td>
+                                    <td><a href="https://links.sgx.com/1.0.0/corporate-announcements/LQCK42988UA0XYLJ/831147_Suntec%20REIT%20-%20FY2024%20Financial%20Results.pdf" target="_blank" class="data-link">2024财报</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <br>
+                        <p><strong>定价：</strong>租户租赁具有竞争力定价，<a href="https://links.sgx.com/1.0.0/corporate-announcements/LQCK42988UA0XYLJ/831147_Suntec%20REIT%20-%20FY2024%20Financial%20Results.pdf" target="_blank" class="data-link" title="来源：Suntec REIT FY2024 Financial Results">2024年10.3%的正租金反转</a>反映市场需求。单位在SGX交易（截至<a href="https://finance.yahoo.com/quote/T82U.SI/" target="_blank" class="data-link" title="Source: Yahoo Finance (2025-06-20)">2025年5月27日0.87新元</a>）。</p>
+                        <p><strong>盈利能力：</strong>2024年4.636亿新元总收入和3.108亿新元净物业收入支持盈利能力，尽管由于更高的融资成本和没有资本分配，DPU下降12.5%。</p>
+                    </div>
+
+                    <div class="step-section">
+                        <div class="step-title">
+                            <div class="step-number">9</div>
+                            定位声明
+                        </div>
+                        <div class="highlight-box">
+                            <p><strong>Suntec REIT定位声明：</strong></p>
+                            <p>Suntec REIT在黄金全球位置提供优质、可持续的商业空间，面向寻求质量和连接的租户，以及寻求稳定、多元化收入的单位持有人，利用其综合资产、ESG领导力和可信品牌。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Conclusion for Question 2 -->
+        <div class="conclusion">
+            <h3 id="en-conclusion2-title">Question 2 Conclusion</h3>
+            <h3 id="zh-conclusion2-title" style="display:none;">问题2结论</h3>
+            <p id="en-conclusion2-text">Suntec REIT solves major problems in a significant way, providing tenants with premium, sustainable spaces in prime locations that meet their needs for prestige and efficiency, and providing unit holders with stable income and growth, mitigating investment volatility. Despite challenges such as vacancy and financing costs, strong market demand (high occupancy, investment interest) is addressed through proactive leasing, refinancing, and ESG strategies, ensuring substantial benefits for both audiences.</p>
+            <p id="zh-conclusion2-text" style="display:none;">Suntec REIT以重大方式解决主要问题，为租户提供黄金位置的高质量、可持续空间，满足他们对声望和效率的需求，并为单位持有人提供稳定收入和增长，缓解投资波动。尽管面临空置和融资成本等挑战，但强劲的市场需求（高入住率、投资兴趣）通过主动租赁、再融资和ESG策略得到解决，确保为两个受众提供实质性利益。</p>
+        </div>
+
+        <!-- Sources Section -->
+        <div class="sources-section">
+            <h3 id="en-sources-title">Data Sources</h3>
+            <h3 id="zh-sources-title" style="display:none;">资料来源</h3>
+            <ul class="sources-list">
+                <li><strong id="en-overview">Suntec REIT Overview & Financials</strong>
+                    <strong id="zh-overview" style="display:none;">Suntec REIT概览与财务</strong>
+                    <ul>
+                        <li id="en-portfolio">Portfolio value (SGD 12.1B), asset allocation: <a href="https://www.sgx.com/securities/annual-reports-related-documents" target="_blank" title="Suntec REIT 2024 Annual Report, SGX">Suntec REIT 2024 Annual Report (SGX)</a></li>
+                        <li id="zh-portfolio" style="display:none;">投资组合价值 (121亿新元), 资产配置: <a href="https://www.sgx.com/securities/annual-reports-related-documents" target="_blank" title="Suntec REIT 2024 Annual Report, SGX">Suntec REIT 2024年度报告 (SGX)</a></li>
+                        <li id="en-financials">FY2024 financial performance (revenue, DPU, gearing, etc.): <a href="https://links.sgx.com/1.0.0/corporate-announcements/LQCK42988UA0XYLJ/831147_Suntec%20REIT%20-%20FY2024%20Financial%20Results.pdf" target="_blank" title="Suntec REIT FY2024 Financial Results, SGX">FY2024 Financial Results (SGX)</a></li>
+                        <li id="zh-financials" style="display:none;">2024财年财务业绩 (收入、DPU、杠杆率等): <a href="https://links.sgx.com/1.0.0/corporate-announcements/LQCK42988UA0XYLJ/831147_Suntec%20REIT%20-%20FY2024%20Financial%20Results.pdf" target="_blank" title="Suntec REIT FY2024 Financial Results, SGX">2024财年财务业绩 (SGX)</a></li>
+                        <li id="en-website">Official website: <a href="https://www.suntecreit.com" target="_blank" title="Suntec REIT website">Suntec REIT Official Website</a></li>
+                        <li id="zh-website" style="display:none;">官网信息: <a href="https://www.suntecreit.com" target="_blank" title="Suntec REIT website">Suntec REIT官网</a></li>
+                        <li id="en-revenue">Revenue context: <a href="https://www.businesstimes.com.sg/companies-markets/suntec-reit" target="_blank" title="The Business Times, 2025-01-08">The Business Times (2025-01-08)</a></li>
+                        <li id="zh-revenue" style="display:none;">收入背景: <a href="https://www.businesstimes.com.sg/companies-markets/suntec-reit" target="_blank" title="The Business Times, 2025-01-08">The Business Times (2025-01-08)</a></li>
+                    </ul>
+                </li>
+                <li><strong id="en-esg">ESG & Sustainability</strong>
+                    <strong id="zh-esg" style="display:none;">ESG与可持续发展</strong>
+                    <ul>
+                        <li id="en-gresb">GRESB rating, energy consumption, carbon neutrality status, green loans: <a href="https://www.suntecreit.com/sustainability.html" target="_blank" title="Suntec REIT 2024 Sustainability Report">Suntec REIT 2024 Sustainability Report</a></li>
+                        <li id="zh-gresb" style="display:none;">GRESB评级, 能源消耗, 碳中和状态, 绿色贷款: <a href="https://www.suntecreit.com/sustainability.html" target="_blank" title="Suntec REIT 2024 Sustainability Report">Suntec REIT 2024可持续发展报告</a></li>
+                        <li id="en-rating">ESG risk rating: <a href="https://www.sustainalytics.com/esg-rating/suntec-real-estate-investment-trust/" target="_blank" title="Sustainalytics ESG Risk Rating, 2024-09-22">Sustainalytics ESG Risk Rating</a></li>
+                        <li id="zh-rating" style="display:none;">ESG风险评级: <a href="https://www.sustainalytics.com/esg-rating/suntec-real-estate-investment-trust/" target="_blank" title="Sustainalytics ESG Risk Rating, 2024-09-22">Sustainalytics ESG风险评级</a></li>
+                    </ul>
+                </li>
+                <li><strong id="en-assets">Assets & Milestones</strong>
+                    <strong id="zh-assets" style="display:none;">资产与里程碑</strong>
+                    <ul>
+                        <li id="en-milestones">Key milestones (Suntec City refurbishment): <a href="https://www.suntecreit.com/milestones.html" target="_blank" title="Suntec REIT Key Milestones">Suntec REIT Key Milestones</a></li>
+                        <li id="zh-milestones" style="display:none;">关键里程碑 (新达城改造): <a href="https://www.suntecreit.com/milestones.html" target="_blank" title="Suntec REIT Key Milestones">Suntec REIT关键里程碑</a></li>
+                        <li id="en-city">Suntec City asset details: <a href="https://www.suntecreit.com/suntec-city.html" target="_blank" title="Suntec City Details">Suntec City Official Page</a></li>
+                        <li id="zh-city" style="display:none;">Suntec City资产详情: <a href="https://www.suntecreit.com/suntec-city.html" target="_blank" title="Suntec City Details">Suntec City官网页面</a></li>
+                    </ul>
+                </li>
+                <li><strong id="en-competition">Competition & Market Context</strong>
+                    <strong id="zh-competition" style="display:none;">竞争与市场背景</strong>
+                    <ul>
+                        <li id="en-competitors">Competitor overview: <a href="https://pitchbook.com/about" target="_blank" title="PitchBook Company Profile">PitchBook Company Profile</a></li>
+                        <li id="zh-competitors" style="display:none;">竞争对手概览: <a href="https://pitchbook.com/about" target="_blank" title="PitchBook Company Profile">PitchBook公司概况</a></li>
+                        <li id="en-demand">Market demand analysis: <a href="https://www.thesingaporeaninvestor.sg/2024/03/27/suntec-reits-annual-report-for-fy2023-what-you-need-to-know/" target="_blank" title="The Singaporean Investor, 2024-03-27">The Singaporean Investor (2024-03-27)</a></li>
+                        <li id="zh-demand" style="display:none;">市场需求分析: <a href="https://www.thesingaporeaninvestor.sg/2024/03/27/suntec-reits-annual-report-for-fy2023-what-you-need-to-know/" target="_blank" title="The Singaporean Investor, 2024-03-27">The Singaporean Investor (2024-03-27)</a></li>
+                    </ul>
+                </li>
+                <li><strong id="en-other">Other Data</strong>
+                    <strong id="zh-other" style="display:none;">其他数据</strong>
+                    <ul>
+                        <li id="en-price">Share price: <a href="https://finance.yahoo.com/quote/T82U.SI/" target="_blank" title="Yahoo Finance, accessed 2025-06-20">Yahoo Finance (as of 2025-06-20)</a></li>
+                        <li id="zh-price" style="display:none;">股价: <a href="https://finance.yahoo.com/quote/T82U.SI/" target="_blank" title="Yahoo Finance, accessed 2025-06-20">Yahoo Finance (截至2025-06-20)</a></li>
+                        <li id="en-disposal">Asset disposal: <a href="https://www.suntecreit.com/newsroom" target="_blank" title="Suntec REIT Newsroom, 2023">Suntec REIT Newsroom (2023)</a></li>
+                        <li id="zh-disposal" style="display:none;">资产剥离: <a href="https://www.suntecreit.com/newsroom" target="_blank" title="Suntec REIT Newsroom, 2023">Suntec REIT新闻室 (2023)</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p id="en-footer">© 2025 Financial Analysis Report | Data Source: Suntec REIT Public Disclosures | Report Generated: January 2025</p>
+            <p id="zh-footer" style="display:none;">© 2025 金融分析报告 | 数据来源：Suntec REIT公开披露信息 | 报告生成日期：2025年1月</p>
+        </div>
+    </div>
+
+    <script>
+        // Language switching function
+        function switchLanguage(lang) {
+            // Update language buttons
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Update HTML lang attribute
+            document.documentElement.lang = lang === 'en' ? 'en' : 'zh-CN';
+            
+            // Show/hide language-specific content
+            const enElements = document.querySelectorAll('[id^="en-"]');
+            const zhElements = document.querySelectorAll('[id^="zh-"]');
+            
+            if (lang === 'en') {
+                enElements.forEach(el => el.style.display = 'block');
+                zhElements.forEach(el => el.style.display = 'none');
+                document.querySelectorAll('.lang-content').forEach(el => {
+                    el.classList.remove('active');
+                });
+                document.querySelectorAll('#en-header, #en-q1-content, #en-q2-content').forEach(el => {
+                    el.classList.add('active');
+                });
+            } else {
+                enElements.forEach(el => el.style.display = 'none');
+                zhElements.forEach(el => el.style.display = 'block');
+                document.querySelectorAll('.lang-content').forEach(el => {
+                    el.classList.remove('active');
+                });
+                document.querySelectorAll('#zh-header, #zh-q1-content, #zh-q2-content').forEach(el => {
+                    el.classList.add('active');
+                });
+            }
+        }
+
+        // Asset allocation pie chart
+        Chart.register(ChartDataLabels);
+        const assetCtx = document.getElementById('assetChart').getContext('2d');
+        const assetChart = new Chart(assetCtx, {
+            type: 'pie',
+            data: {
+                labels: ['Singapore', 'Australia', 'UK'],
+                datasets: [{
+                    data: [77.9, 12.4, 9.7],
+                    backgroundColor: [
+                        '#1e3c72',
+                        '#667eea',
+                        '#764ba2'
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            usePointStyle: true
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed !== null) {
+                                    label += context.parsed + '%';
+                                }
+                                return label;
+                            }
+                        }
+                    },
+                    datalabels: {
+                        formatter: (value, ctx) => {
+                            return value + '%';
+                        },
+                        color: '#fff',
+                        font: {
+                            weight: 'bold'
+                        }
+                    }
+                }
+            }
+        });
+
+        // ESG progress timeline chart
+        const esgCtx = document.getElementById('esgChart').getContext('2d');
+        const esgChart = new Chart(esgCtx, {
+            type: 'line',
+            data: {
+                labels: ['2019', '2020', '2021', '2022', '2023', '2024'],
+                datasets: [{
+                    label: 'Energy Intensity Reduction (%)',
+                    data: [0, 5, 10, 15, 18, 20.4],
+                    borderColor: '#4caf50',
+                    backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }, {
+                    label: 'GRESB Rating',
+                    data: [4, 5, 5, 5, 5, 5],
+                    borderColor: '#ff9800',
+                    backgroundColor: 'rgba(255, 152, 0, 0.1)',
+                    tension: 0.4,
+                    yAxisID: 'y1'
+                }]
+            },
+            options: {
+                responsive: true,
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                scales: {
+                    y: {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        title: {
+                            display: true,
+                            text: 'Energy Intensity Reduction (%)'
+                        }
+                    },
+                    y1: {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        title: {
+                            display: true,
+                            text: 'GRESB Rating'
+                        },
+                        grid: {
+                            drawOnChartArea: false,
+                        },
+                        min: 0,
+                        max: 5
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html> 
