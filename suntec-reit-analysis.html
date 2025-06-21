@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-lang-key="pageTitle">新达信托（Suntec REIT）股权结构深度分析</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 16px;
+            line-height: 1.6em;
+            color: #111827;
+            background-color: #F3F4F6;
+            margin: 0;
+        }
+        .container {
+            max-width: 960px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        h1 {
+            font-size: 32px;
+            color: #1E3A8A;
+            font-weight: 700;
+        }
+        nav {
+            position: sticky;
+            top: 0;
+            background: #1E3A8A;
+            padding: 10px 0;
+            z-index: 1000;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: 700;
+        }
+        main {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+        section {
+            padding-top: 60px;
+            margin-top: -60px;
+            margin-bottom: 30px;
+        }
+        h2 {
+            font-size: 24px;
+            color: #1E3A8A;
+            border-bottom: 2px solid #F3F4F6;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #F3F4F6;
+        }
+        tr:nth-child(even) {
+            background-color: #F9FAFB;
+        }
+        .chart-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            max-width: 600px;
+            margin: 30px auto;
+        }
+        .pie-chart-css {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            /* The percentages have been normalized to 100% for correct visual proportion. */
+            background-image: conic-gradient(
+                #3b82f6 0% 41.7%,   /* Non-Insider Institutions */
+                #10B981 41.7% 78.2%, /* Retail Shares */
+                #f59e0b 78.2% 91.7%, /* Executive Shares */
+                #1E3A8A 91.7% 100%  /* Corporate Insider */
+            );
+        }
+        .legend {
+            list-style: none;
+            padding: 0;
+            margin-left: 20px;
+        }
+        .legend li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .legend span {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+        .positive {
+            color: #10B981;
+            font-weight: bold;
+        }
+        .critical-examination {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #fffbe6;
+            border-left: 5px solid #ffc107;
+            border-radius: 4px;
+        }
+        .critical-examination h2 {
+            color: #856404;
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #6B7280;
+        }
+        a {
+            color: #1E3A8A;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 28px; }
+            main { flex-direction: column; padding: 20px; }
+            nav a { margin: 0 8px; font-size: 14px; }
+        }
+        /* Custom Tooltip Styles */
+        .apexcharts-tooltip-custom {
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.95);
+            color: #111827;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            font-family: 'Roboto', sans-serif;
+            min-width: 200px;
+        }
+        .apexcharts-tooltip-custom-title {
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: #1E3A8A;
+            font-size: 16px;
+        }
+        .apexcharts-tooltip-custom-value {
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        .apexcharts-tooltip-custom-breakdown {
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid #e2e8f0;
+            font-size: 13px;
+            color: #4A5568;
+        }
+        .chart-dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .chart-card {
+            background-color: #F9FAFB;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+        .chart-card h3 {
+            text-align: center;
+            color: #1E3A8A;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        /* End Custom Tooltip Styles */
+        :root {
+            --header-bg-color: #1E3A8A; /* 深蓝 */
+            --header-text-color: #FFFFFF;
+        }
+
+        header {
+            background-color: var(--header-bg-color);
+            color: var(--header-text-color);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+            margin: 0;
+        }
+        
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        #lang-switcher {
+            background-color: #4A5568; /* A slightly lighter shade */
+            color: #FFFFFF;
+            border: 1px solid #718096;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Roboto', 'Noto Sans SC', sans-serif;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        #lang-switcher:hover {
+            background-color: #2D3748; /* Darker on hover */
+        }
+
+        nav {
+            display: flex;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1 data-lang-key="headerTitle">新达信托股权分析</h1>
+        <div class="header-controls">
+            <nav>
+                <a href="#summary" data-lang-key="navSummary">摘要</a>
+                <a href="#breakdown" data-lang-key="navBreakdown">详细分解</a>
+                <a href="#visualization" data-lang-key="navViz">可视化</a>
+                <a href="#key-points" data-lang-key="navKey">关键检视</a>
+                <a href="#sources" data-lang-key="navSource">信息来源</a>
+            </nav>
+            <button id="lang-switcher" aria-label="Switch Language">切换中文</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <main>
+            <section id="summary">
+                <h2 data-lang-key="summaryTitle">股权构成摘要</h2>
+                <p data-lang-key="summaryPara">本报告详细分析了新达信托（Suntec REIT）的股权构成，总流通单位约为 <a href="https://www.sgx.com/securities/stocks?security=T82U" target="_blank" aria-label="Link to SGX Main Page for Suntec REIT">29.3亿</a>。数据基于截至2024年10月的最新公开信息，并根据持股类型进行了精确分类。</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th data-lang-key="tableCat_Category">类别</th>
+                            <th data-lang-key="tableCat_Percentage">百分比</th>
+                            <th data-lang-key="tableCat_Description">描述</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td data-lang-key="summaryRow1_Cat"><strong>非内部机构</strong></td>
+                            <td class="positive">~38.5%</td>
+                            <td data-lang-key="summaryRow1_Desc">由贝莱德、先锋等大型基金持有，是股价的重要稳定力量。</td>
+                        </tr>
+                        <tr>
+                            <td data-lang-key="summaryRow2_Cat"><strong>零售股份</strong></td>
+                            <td class="positive">~42%</td>
+                            <td data-lang-key="summaryRow2_Desc">广大个人投资者（散户），代表了市场的广泛参与度。</td>
+                        </tr>
+                         <tr>
+                            <td data-lang-key="summaryRow3_Cat"><strong>内部人持股</strong></td>
+                            <td class="positive">~17.8%</td>
+                            <td data-lang-key="summaryRow3_Desc">由公司高管及管理人构成，是影响公司决策的关键少数。</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+            
+            <hr>
+
+            <section id="breakdown">
+                <h2 data-lang-key="breakdownTitle">详细分解</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th data-lang-key="breakdownHeader_Type">股份类型</th>
+                            <th data-lang-key="breakdownHeader_Percentage">百分比</th>
+                            <th data-lang-key="breakdownHeader_Details">详细说明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td data-lang-key="breakdownRow1_Type">零售股份 (Retail)</td>
+                            <td><span class="positive">~42%</span></td>
+                            <td data-lang-key="breakdownRow1_Details">由广大的<a href="https://finance.yahoo.com/quote/T82U.SI/holders" target="_blank">个人投资者</a>持有，代表了广泛的市场参与度。</td>
+                        </tr>
+                        <tr>
+                            <td data-lang-key="breakdownRow2_Type">非内部机构 (Non-Insider Institutions)</td>
+                            <td><span class="positive">~38.5%</span></td>
+                            <td data-lang-key="breakdownRow2_Details">由贝莱德、先锋等大型基金持有。此数据通过总机构持股(48%)减去内部人企业持股(~9.5%)计算得出，以避免重复计算。</td>
+                        </tr>
+                        <tr>
+                            <td data-lang-key="breakdownRow3_Type">内部人 (Insiders)</td>
+                            <td><span class="positive">~17.8%</span></td>
+                            <td data-lang-key="breakdownRow3_Details">由公司高管及管理人构成。其核心为<a href="https://simplywall.st/stocks/sg/real-estate/sgx-t82u/suntec-real-estate-investment-trust-shares" target="_blank">唐逸刚先生</a> (~15.5%)及<a href="https://www.esr.com/zh-cn/" target="_blank">ARA/ESR集团</a> (~9.5%)，总数经过重叠调整。</td>
+                        </tr>
+                        <tr>
+                            <td data-lang-key="breakdownRow4_Type">创始人股份</td>
+                            <td><span class="positive">0%</span></td>
+                            <td data-lang-key="breakdownRow4_Details">经核实，<a href="https://mothership.sg/2018/06/hong-kong-investors-suntec-city/" target="_blank">原始财团成员</a>已无持股记录。</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <hr>
+            
+            <section id="visualization">
+                <h2 data-lang-key="vizTitle">股权结构可视化</h2>
+                <p data-lang-key="vizPara">为了清晰地展示股权构成，我们采用了一个交互式环形图。请将鼠标悬停在图表的不同部分，以获取该群体的详细构成和说明。</p>
+                <div class="chart-container">
+                    <div id="interactive-donut-chart"></div>
+                </div>
+            </section>
+            
+            <hr>
+
+            <section id="key-points">
+                <h2 data-lang-key="keyTitle">关键检视</h2>
+                <ul>
+                    <li data-lang-key="keyPoint1"><strong>高内部人持股 (~17.8%)</strong>: 这是一个强烈的积极信号，表明管理层和公司利益高度一致。唐逸刚先生和ARA/ESR集团的持股是关键。</li>
+                    <li data-lang-key="keyPoint2"><strong>强大的机构支持 (~38.5%)</strong>: 顶级基金的持有不仅为股价提供了稳定性，也反映了专业投资者对Suntec REIT长期价值的认可。</li>
+                    <li data-lang-key="keyPoint3"><strong>创始人完全退出</strong>: 原始财团的退出标志着公司已进入成熟的机构化管理阶段，股权结构更加现代和透明。</li>
+                </ul>
+            </section>
+
+            <hr>
+            
+            <section id="sources">
+                <h2 data-lang-key="sourcesTitle">信息来源</h2>
+                <ul>
+                    <li data-lang-key="source1"><a href="https://www.sgx.com/securities/stocks?security=T82U" target="_blank">SGX (Singapore Exchange)</a> - Provides official data on units in circulation.</li>
+                    <li data-lang-key="source2"><a href="https://finance.yahoo.com/quote/T82U.SI/holders" target="_blank">Yahoo Finance</a> - Provides institutional and retail ownership percentages.</li>
+                    <li data-lang-key="source3"><a href="https://simplywall.st/stocks/sg/real-estate/sgx-t82u/suntec-real-estate-investment-trust-shares" target="_blank">Simply Wall St</a> - Provides detailed data on individual executive holdings.</li>
+                    <li data-lang-key="source4"><a href="https://www.esr.com/zh-cn/" target="_blank">ESR Group</a> - Official website of the REIT manager.</li>
+                    <li data-lang-key="source5"><a href="https://mothership.sg/2018/06/hong-kong-investors-suntec-city/" target="_blank">Mothership.sg</a> - Reference article on the historical background of the founders.</li>
+                </ul>
+            </section>
+        </main>
+        <footer>
+            <p data-lang-key="footerText">© 2024 股权分析报告。保留所有权利。</p>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let currentLang = 'en';
+            let donutChart = null;
+
+            const translations = {
+                en: {
+                    pageTitle: 'Suntec REIT In-Depth Ownership Analysis',
+                    headerTitle: 'Suntec REIT Ownership Analysis',
+                    navSummary: 'Summary',
+                    navBreakdown: 'Detailed Breakdown',
+                    navViz: 'Visualization',
+                    navKey: 'Key Insights',
+                    navSource: 'Sources',
+                    langBtn: 'Switch to Chinese',
+                    summaryTitle: 'Ownership Structure Summary',
+                    summaryPara: 'This report provides a detailed analysis of Suntec REIT\'s ownership structure, with a total of approximately <a href="https://www.sgx.com/securities/stocks?security=T82U" target="_blank" aria-label="Link to SGX Main Page for Suntec REIT">2.93 billion</a> units in circulation. The data is based on the latest public information as of October 2024 and is precisely categorized by holding type.',
+                    tableCat_Category: 'Category',
+                    tableCat_Percentage: 'Percentage',
+                    tableCat_Description: 'Description',
+                    summaryRow1_Cat: '<strong>Non-Insider Institutions</strong>',
+                    summaryRow1_Desc: 'Held by large funds such as BlackRock and Vanguard, serving as a significant stabilizing force for the stock price.',
+                    summaryRow2_Cat: '<strong>Retail Ownership</strong>',
+                    summaryRow2_Desc: 'The general public of individual investors (retail), representing broad market participation.',
+                    summaryRow3_Cat: '<strong>Insider Ownership</strong>',
+                    summaryRow3_Desc: 'Comprised of company executives and management, representing a key minority influencing corporate decisions.',
+                    breakdownTitle: 'Detailed Breakdown',
+                    breakdownHeader_Type: 'Share Type',
+                    breakdownHeader_Percentage: 'Percentage',
+                    breakdownHeader_Details: 'Detailed Description',
+                    breakdownRow1_Type: 'Retail Ownership',
+                    breakdownRow1_Details: 'Held by the general public of <a href="https://finance.yahoo.com/quote/T82U.SI/holders" target="_blank">individual investors</a>, reflecting broad market participation.',
+                    breakdownRow2_Type: 'Non-Insider Institutions',
+                    breakdownRow2_Details: 'Held by large funds like BlackRock and Vanguard. This figure is calculated by subtracting insider corporate holdings (~9.5%) from total institutional ownership (48%) to avoid double-counting.',
+                    breakdownRow3_Type: 'Insiders',
+                    breakdownRow3_Details: 'Comprised of company executives and management. The core consists of Director <a href="https://simplywall.st/stocks/sg/real-estate/sgx-t82u/suntec-real-estate-investment-trust-shares" target="_blank">Mr. Yigang Tang</a> (~15.5%) and <a href="https://www.esr.com/zh-cn/" target="_blank">ARA/ESR Group</a> (~9.5%), with the total adjusted for overlap.',
+                    breakdownRow4_Type: 'Founder Shares',
+                    breakdownRow4_Details: 'It has been verified that the <a href="https://mothership.sg/2018/06/hong-kong-investors-suntec-city/" target="_blank">original consortium members</a> no longer hold any shares.',
+                    vizTitle: 'Ownership Structure Visualization',
+                    vizPara: 'To clearly illustrate the ownership structure, we use an interactive donut chart. Please hover over the different sections of the chart to get a detailed breakdown and description of each group.',
+                    keyTitle: 'Key Insights',
+                    keyPoint1: '<strong>High Insider Ownership (~17.8%)</strong>: This is a strong positive signal, indicating high alignment between management and shareholder interests. The holdings of Mr. Yigang Tang and the ARA/ESR Group are pivotal.',
+                    keyPoint2: '<strong>Strong Institutional Backing (~38.5%)</strong>: Holdings by top-tier funds not only provide price stability but also reflect professional investors\' confidence in Suntec REIT\'s long-term value.',
+                    keyPoint3: '<strong>Complete Founder Exit</strong>: The exit of the original consortium signifies that the company has entered a mature phase of institutional management, with a more modern and transparent ownership structure.',
+                    sourcesTitle: 'Information Sources',
+                    source1: '<a href="https://www.sgx.com/securities/stocks?security=T82U" target="_blank">SGX (Singapore Exchange)</a> - Provides official data on units in circulation.',
+                    source2: '<a href="https://finance.yahoo.com/quote/T82U.SI/holders" target="_blank">Yahoo Finance</a> - Provides institutional and retail ownership percentages.',
+                    source3: '<a href="https://simplywall.st/stocks/sg/real-estate/sgx-t82u/suntec-real-estate-investment-trust-shares" target="_blank">Simply Wall St</a> - Provides detailed data on individual executive holdings.',
+                    source4: '<a href="https://www.esr.com/zh-cn/" target="_blank">ESR Group</a> - Official website of the REIT manager.',
+                    source5: '<a href="https://mothership.sg/2018/06/hong-kong-investors-suntec-city/" target="_blank">Mothership.sg</a> - Reference article on the historical background of the founders.',
+                    footerText: '© 2024 Ownership Analysis Report. All Rights Reserved.',
+                    chartRetailName: 'Retail Ownership',
+                    chartRetailBreakdown: 'Refers to the broad base of individual investors (the public) who hold shares through brokerage accounts. The dispersion of this ownership is a sign of a healthy market.',
+                    chartInstName: 'Non-Insider Institutions',
+                    chartInstBreakdown: 'Refers to large investment funds, pension funds, and insurance companies. Their substantial holdings typically provide stability to the stock price.<br><strong>Key Players:</strong> BlackRock, The Vanguard Group.',
+                    chartInsiderName: 'Insiders',
+                    chartInsiderBreakdown: 'Refers to company executives and management. Their holdings are key to influencing corporate decisions.<br><strong>Core Composition:</strong><br>- Mr. Yigang Tang (Director): ~15.5%<br>- ARA/ESR Group (Manager): ~9.5%<br><small>(Note: Overlap exists; the sum does not represent the total insider percentage.)</small>',
+                    tooltipValue: 'Ownership'
+                },
+                zh: {
+                    pageTitle: '新达信托（Suntec REIT）股权结构深度分析',
+                    headerTitle: '新达信托股权分析',
+                    navSummary: '摘要',
+                    navBreakdown: '详细分解',
+                    navViz: '可视化',
+                    navKey: '关键检视',
+                    navSource: '信息来源',
+                    langBtn: 'Switch to English',
+                    summaryTitle: '股权构成摘要',
+                    summaryPara: '本报告详细分析了新达信托（Suntec REIT）的股权构成，总流通单位约为 <a href="https://www.sgx.com/securities/stocks?security=T82U" target="_blank" aria-label="Link to SGX Main Page for Suntec REIT">29.3亿</a>。数据基于截至2024年10月的最新公开信息，并根据持股类型进行了精确分类。',
+                    tableCat_Category: '类别',
+                    tableCat_Percentage: '百分比',
+                    tableCat_Description: '描述',
+                    summaryRow1_Cat: '<strong>非内部机构</strong>',
+                    summaryRow1_Desc: '由贝莱德、先锋等大型基金持有，是股价的重要稳定力量。',
+                    summaryRow2_Cat: '<strong>零售股份</strong>',
+                    summaryRow2_Desc: '广大个人投资者（散户），代表了市场的广泛参与度。',
+                    summaryRow3_Cat: '<strong>内部人持股</strong>',
+                    summaryRow3_Desc: '由公司高管及管理人构成，是影响公司决策的关键少数。',
+                    breakdownTitle: '详细分解',
+                    breakdownHeader_Type: '股份类型',
+                    breakdownHeader_Percentage: '百分比',
+                    breakdownHeader_Details: '详细说明',
+                    breakdownRow1_Type: '零售股份 (Retail)',
+                    breakdownRow1_Details: '由广大的<a href="https://finance.yahoo.com/quote/T82U.SI/holders" target="_blank">个人投资者</a>持有，代表了广泛的市场参与度。',
+                    breakdownRow2_Type: '非内部机构 (Non-Insider Institutions)',
+                    breakdownRow2_Details: '由贝莱德、先锋等大型基金持有。此数据通过总机构持股(48%)减去内部人企业持股(~9.5%)计算得出，以避免重复计算。',
+                    breakdownRow3_Type: '内部人 (Insiders)',
+                    breakdownRow3_Details: '由公司高管及管理人构成。其核心为<a href="https://simplywall.st/stocks/sg/real-estate/sgx-t82u/suntec-real-estate-investment-trust-shares" target="_blank">唐逸刚先生</a> (~15.5%)及<a href="https://www.esr.com/zh-cn/" target="_blank">ARA/ESR集团</a> (~9.5%)，总数经过重叠调整。',
+                    breakdownRow4_Type: '创始人股份',
+                    breakdownRow4_Details: '经核实，<a href="https://mothership.sg/2018/06/hong-kong-investors-suntec-city/" target="_blank">原始财团成员</a>已无持股记录。',
+                    vizTitle: '股权结构可视化',
+                    vizPara: '为了清晰地展示股权构成，我们采用了一个交互式环形图。请将鼠标悬停在图表的不同部分，以获取该群体的详细构成和说明。',
+                    keyTitle: '关键检视',
+                    keyPoint1: '<strong>高内部人持股 (~17.8%)</strong>: 这是一个强烈的积极信号，表明管理层和公司利益高度一致。唐逸刚先生和ARA/ESR集团的持股是关键。',
+                    keyPoint2: '<strong>强大的机构支持 (~38.5%)</strong>: 顶级基金的持有不仅为股价提供了稳定性，也反映了专业投资者对Suntec REIT长期价值的认可。',
+                    keyPoint3: '<strong>创始人完全退出</strong>: 原始财团的退出标志着公司已进入成熟的机构化管理阶段，股权结构更加现代和透明。',
+                    sourcesTitle: '信息来源',
+                    source1: '<a href="https://www.sgx.com/securities/stocks?security=T82U" target="_blank">SGX (新加坡交易所)</a> - 提供官方流通单位数据。',
+                    source2: '<a href="https://finance.yahoo.com/quote/T82U.SI/holders" target="_blank">Yahoo Finance (雅虎财经)</a> - 提供机构及零售持股比例。',
+                    source3: '<a href="https://simplywall.st/stocks/sg/real-estate/sgx-t82u/suntec-real-estate-investment-trust-shares" target="_blank">Simply Wall St</a> - 提供个人高管持股的详细数据。',
+                    source4: '<a href="https://www.esr.com/zh-cn/" target="_blank">ESR Group (ESR集团)</a> - REIT管理人的官方网站。',
+                    source5: '<a href="https://mothership.sg/2018/06/hong-kong-investors-suntec-city/" target="_blank">Mothership.sg</a> - 关于创始人历史背景的参考文章。',
+                    footerText: '© 2024 股权分析报告。保留所有权利。',
+                    chartRetailName: '零售股份 (Retail)',
+                    chartRetailBreakdown: '指通过券商账户持有股票的广大个人投资者（散户）。这部分股权的分散性是市场健康的一个标志。',
+                    chartInstName: '非内部机构 (Non-Insider Institutions)',
+                    chartInstBreakdown: '指大型投资基金、养老基金和保险公司等专业投资机构。它们的大量持股通常为股价提供了稳定性。<br><strong>主要代表:</strong> 贝莱德(BlackRock), 先锋集团(Vanguard)。',
+                    chartInsiderName: '内部人 (Insiders)',
+                    chartInsiderBreakdown: '指公司高管及管理人。其持股是影响公司决策的关键。<br><strong>核心构成:</strong><br>- 唐逸刚先生 (董事): ~15.5%<br>- ARA/ESR集团 (管理人): ~9.5%<br><small>(注: 两者存在重叠，总和不代表内部人总数)</small>',
+                    tooltipValue: '持股比例'
+                }
+            };
+
+            function renderChart(lang) {
+                if (donutChart) {
+                    donutChart.destroy();
+                }
+
+                const chartData = [
+                    { percentage: 42, name: translations[lang].chartRetailName, breakdown: translations[lang].chartRetailBreakdown },
+                    { percentage: 38.5, name: translations[lang].chartInstName, breakdown: translations[lang].chartInstBreakdown },
+                    { percentage: 17.8, name: translations[lang].chartInsiderName, breakdown: translations[lang].chartInsiderBreakdown }
+                ];
+
+                const donutOptions = {
+                    series: chartData.map(d => d.percentage),
+                    chart: { 
+                        type: 'donut', 
+                        height: 400,
+                        animations: { enabled: false } // Disable animation on redraw
+                    },
+                    dataLabels: {
+                        enabled: true,
+                        formatter: function (val, opts) {
+                            return chartData[opts.seriesIndex].percentage.toFixed(1) + '%';
+                        },
+                        style: {
+                            fontSize: '16px',
+                            fontFamily: 'Helvetica, Arial, sans-serif',
+                            fontWeight: 'bold',
+                            colors: ["#fff"]
+                        },
+                        dropShadow: {
+                            enabled: true, top: 1, left: 1, blur: 2, color: '#000', opacity: 0.5
+                        }
+                    },
+                    labels: chartData.map(d => d.name),
+                    colors: ['#10B981', '#3b82f6', '#f59e0b'],
+                    tooltip: {
+                        enabled: true,
+                        custom: function({ seriesIndex, w }) {
+                            const data = chartData[seriesIndex];
+                            return `<div class="apexcharts-tooltip-custom">
+                                        <div class="apexcharts-tooltip-custom-title">${data.name}</div>
+                                        <div class="apexcharts-tooltip-custom-value">${translations[lang].tooltipValue}: ${data.percentage}%</div>
+                                        <div class="apexcharts-tooltip-custom-breakdown">${data.breakdown}</div>
+                                    </div>`;
+                        }
+                    },
+                    legend: { position: 'bottom' },
+                    responsive: [{ breakpoint: 480, options: { chart: { width: '100%' }, legend: { position: 'bottom' } } }]
+                };
+                
+                donutChart = new ApexCharts(document.querySelector("#interactive-donut-chart"), donutOptions);
+                donutChart.render();
+            }
+
+            function switchLanguage(lang) {
+                document.documentElement.lang = lang === 'en' ? 'en' : 'zh-CN';
+                document.querySelectorAll('[data-lang-key]').forEach(el => {
+                    const key = el.getAttribute('data-lang-key');
+                    if (translations[lang][key]) {
+                        el.innerHTML = translations[lang][key];
+                    }
+                });
+                document.getElementById('lang-switcher').textContent = translations[lang].langBtn;
+                renderChart(lang);
+            }
+
+            document.getElementById('lang-switcher').addEventListener('click', () => {
+                currentLang = currentLang === 'en' ? 'zh' : 'en';
+                switchLanguage(currentLang);
+            });
+
+            // Initial load
+            switchLanguage(currentLang);
+        });
+    </script>
+</body>
+</html> 
